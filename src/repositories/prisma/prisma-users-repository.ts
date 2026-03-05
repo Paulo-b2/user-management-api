@@ -5,6 +5,16 @@ import { getPrisma } from "../../lib/prisma.js";
 export class PrismaUsersRepository implements UsersRepository {
   private prisma = getPrisma();
 
+  findById(id: string) {
+    const user = this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  }
+
   findByEmail(email: string) {
     const user = this.prisma.user.findUnique({
       where: {
