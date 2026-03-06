@@ -12,10 +12,6 @@ export class ListUseCase {
   async execute(): Promise<GetUserByIdUseCaseResponse> {
     const users = await this.usersRepository.findAll();
 
-    if (!users) {
-      throw new ResourceNotFound();
-    }
-
     return {
       users,
     };
