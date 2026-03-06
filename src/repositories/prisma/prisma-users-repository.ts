@@ -5,27 +5,42 @@ import { getPrisma } from "../../lib/prisma.js";
 export class PrismaUsersRepository implements UsersRepository {
   private prisma = getPrisma();
 
-  findById(id: string) {
-    const user = this.prisma.user.findUnique({
+  async findAll() {
+    const users = await this.prisma.user.findMany({
+      where: {
+        isActive: true,
+      },
+    });
+
+    return users;
+  }
+
+  async findById(id: string) {
+    const user = await this.prisma.user.findUnique({
       where: {
         id,
       },
     });
 
+    if (!user?.isActive) {
+      return null;
+    }
+
     return user;
   }
 
-  findByEmail(email: string) {
-    const user = this.prisma.user.findUnique({
+  async findByEmail(email: string) {
+    const user = await this.prisma.user.findUnique({
       where: {
         email,
+        isActive: true,
       },
     });
 
     return user;
   }
-  create(data: Prisma.UserCreateInput) {
-    const user = this.prisma.user.create({
+  async create(data: Prisma.UserCreateInput) {
+    const user = await this.prisma.user.create({
       data,
     });
 
