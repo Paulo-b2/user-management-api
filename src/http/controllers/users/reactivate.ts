@@ -1,7 +1,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { makeReactivateUserUseCase } from "../../../use-cases/factories/make-reactivate-user-use-case.js";
-import { ResourceNotFound } from "../../../use-cases/errors/resource-not-found-error.js";
+import { ResourceNotFoundError } from "../../../use-cases/errors/resource-not-found-error.js";
 import { UserAlreadyActiveError } from "../../../use-cases/errors/user-already-active-error.js";
 
 export async function reactivate(request: FastifyRequest, reply: FastifyReply) {
@@ -21,7 +21,7 @@ export async function reactivate(request: FastifyRequest, reply: FastifyReply) {
       password_hash: undefined,
     });
   } catch (error) {
-    if (error instanceof ResourceNotFound) {
+    if (error instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: error.message });
     }
 

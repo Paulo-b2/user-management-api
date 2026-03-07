@@ -2,7 +2,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 import { makeUpdateUserUseCase } from "../../../use-cases/factories/make-update-user-use-case.js";
 import { UserAlreadyExistsError } from "../../../use-cases/errors/user-already-exists-error.js";
-import { ResourceNotFound } from "../../../use-cases/errors/resource-not-found-error.js";
+import { ResourceNotFoundError } from "../../../use-cases/errors/resource-not-found-error.js";
 
 export async function update(request: FastifyRequest, reply: FastifyReply) {
   const updateParamsSchema = z.object({
@@ -32,7 +32,7 @@ export async function update(request: FastifyRequest, reply: FastifyReply) {
 
     return reply.status(200).send(user);
   } catch (error) {
-    if (error instanceof ResourceNotFound) {
+    if (error instanceof ResourceNotFoundError) {
       return reply.status(404).send({ message: error.message });
     }
     if (error instanceof UserAlreadyExistsError) {

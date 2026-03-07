@@ -4,7 +4,7 @@ import type {
   UsersRepository,
 } from "../repositories/users-repository.js";
 import { hash } from "bcryptjs";
-import { ResourceNotFound } from "./errors/resource-not-found-error.js";
+import { ResourceNotFoundError } from "./errors/resource-not-found-error.js";
 import { UserAlreadyExistsError } from "./errors/user-already-exists-error.js";
 
 interface UpdateUserUseCaseRequest {
@@ -30,7 +30,7 @@ export class UpdateUserUseCase {
     const user = await this.usersRepository.findById(id);
 
     if (!user) {
-      throw new ResourceNotFound();
+      throw new ResourceNotFoundError();
     }
 
     let password_hash: string | undefined;

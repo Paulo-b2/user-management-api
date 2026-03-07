@@ -1,6 +1,6 @@
 import type { User } from "@prisma/client";
 import type { UsersRepository } from "../repositories/users-repository.js";
-import { ResourceNotFound } from "./errors/resource-not-found-error.js";
+import { ResourceNotFoundError } from "./errors/resource-not-found-error.js";
 import { UserAlreadyActiveError } from "./errors/user-already-active-error.js";
 
 interface ReactivateUserUseCaseRequest {
@@ -20,7 +20,7 @@ export class ReactivateUserUseCase {
     const user = await this.usersRepository.findByIdIncludingInactive(id);
 
     if (!user) {
-      throw new ResourceNotFound();
+      throw new ResourceNotFoundError();
     }
 
     if (user.isActive) {
