@@ -7,7 +7,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   const createSchema = z.object({
     name: z.string(),
     email: z.string(),
-    password: z.string(),
+    password: z.string().min(6),
   });
 
   const { name, email, password } = createSchema.parse(request.body);

@@ -1,5 +1,5 @@
 import type { Prisma } from "@prisma/client";
-import type { UsersRepository } from "../users-repository.js";
+import type { UpdateUserData, UsersRepository } from "../users-repository.js";
 import { getPrisma } from "../../lib/prisma.js";
 
 export class PrismaUsersRepository implements UsersRepository {
@@ -30,10 +30,10 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async findByEmail(email: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: {
         email,
-        isActive: true,
+        //estou buscando usuário ativo ou inativo
       },
     });
 
@@ -41,6 +41,17 @@ export class PrismaUsersRepository implements UsersRepository {
   }
   async create(data: Prisma.UserCreateInput) {
     const user = await this.prisma.user.create({
+      data,
+    });
+
+    return user;
+  }
+
+  async update(data: UpdateUserData) {
+    const user = await this.prisma.user.update({
+      where: {
+        id: data.id,
+      },
       data,
     });
 
