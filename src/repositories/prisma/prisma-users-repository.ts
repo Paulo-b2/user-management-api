@@ -1,4 +1,4 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma, User } from "@prisma/client";
 import type { UpdateUserData, UsersRepository } from "../users-repository.js";
 import { getPrisma } from "../../lib/prisma.js";
 
@@ -65,5 +65,28 @@ export class PrismaUsersRepository implements UsersRepository {
         isActive: false,
       },
     });
+  }
+
+  async findByIdIncludingInactive(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return user;
+  }
+
+  async reactivate(id: string) {
+    const user = await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: true,
+      },
+    });
+
+    return user;
   }
 }
