@@ -11,6 +11,7 @@ export interface UsersRepository {
   findAll(): Promise<User[]>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
+  findAllInactive(): Promise<User[]>;
   create(data: Prisma.UserCreateInput): Promise<User>;
   update(data: UpdateUserData): Promise<User>;
   delete(id: string): Promise<void>;

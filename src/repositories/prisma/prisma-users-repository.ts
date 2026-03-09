@@ -15,6 +15,16 @@ export class PrismaUsersRepository implements UsersRepository {
     return users;
   }
 
+  findAllInactive() {
+    const users = this.prisma.user.findMany({
+      where: {
+        isActive: false,
+      },
+    });
+
+    return users;
+  }
+
   async findById(id: string) {
     const user = await this.prisma.user.findUnique({
       where: {
