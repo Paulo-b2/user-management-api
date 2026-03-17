@@ -6,16 +6,20 @@ import { deleteUser } from "./delete.js";
 import { update } from "./update.js";
 import { reactivate } from "./reactivate.js";
 import { getInactive } from "./list-inactive.js";
+import { authenticate } from "./authenticate.js";
+import { verifyJWT } from "../../middlewares/verify-jwt.js";
 
 export async function usersRoutes(app: FastifyInstance) {
-  app.get("/users", list);
-  app.get("/users/:id", getById);
-  app.get("/users/inactive", getInactive);
-
   app.post("/users", create);
+  app.post("/sessions", authenticate);
 
-  app.patch("/users/:id", update);
-  app.patch("/users/:id/reactivate", reactivate);
+  // Authenticated
+  app.get("/users", { onRequest: [verifyJWT] }, list);
+  app.get("/users/:id", { onRequest: [verifyJWT] }, getById);
+  app.get("/users/inactive", { onRequest: [verifyJWT] }, getInactive);
 
-  app.delete("/users/:id", deleteUser);
+  app.patch("/users/:id", { onRequest: [verifyJWT] }, update);
+  app.patch("/users/:id/reactivate", { onRequest: [verifyJWT] }, reactivate);
+
+  app.delete("/users/:id", { onRequest: [verifyJWT] }, deleteUser);
 }
