@@ -8,10 +8,13 @@ import { reactivate } from "./reactivate.js";
 import { getInactive } from "./list-inactive.js";
 import { authenticate } from "./authenticate.js";
 import { verifyJWT } from "../../middlewares/verify-jwt.js";
+import { refresh } from "./refresh.js";
 
 export async function usersRoutes(app: FastifyInstance) {
   app.post("/users", create);
   app.post("/sessions", authenticate);
+
+  app.patch("/token/refresh", refresh);
 
   // Authenticated
   app.get("/users", { onRequest: [verifyJWT] }, list);
