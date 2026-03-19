@@ -1,14 +1,21 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { makeGetInactiveUsersUseCase } from "../../../use-cases/factories/make-get-inactive-users-use-case.js";
+import { makeListInactiveUsersUseCase } from "../../../use-cases/factories/make-list-inactive-users-use-case.js";
+import z from "zod";
 
-export async function getInactive(
+export async function listInactive(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
-  try {
-    const usersRepository = makeGetInactiveUsersUseCase();
+  const getInactiveQuerySchema = z.object({
+    page: z.coerce.number().min(1).default(1),
+  });
 
-    const users = await usersRepository.execute();
+  const { page } = getInactiveQuerySchema.parse(request.query);
+
+  try {
+    const listInactiveUsersUseCase = makeListInactiveUsersUseCase();
+
+    const users = await listInactiveUsersUseCase.execute({ page });
 
     return reply.status(200).send(users);
   } catch (error) {

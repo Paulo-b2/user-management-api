@@ -1,21 +1,21 @@
 import type { User } from "@prisma/client";
 import type { UsersRepository } from "../repositories/users-repository.js";
 
-interface ListUserByIdUseCaseRequest {
+interface ListInactiveUsersUseCaseRequest {
   page: number;
 }
 
-interface ListUserByIdUseCaseResponse {
+interface ListInactiveUsersUseCaseResponse {
   users: User[];
 }
 
-export class ListUseCase {
+export class ListInactiveUsersUseCase {
   constructor(private usersRepository: UsersRepository) {}
 
   async execute({
     page,
-  }: ListUserByIdUseCaseRequest): Promise<ListUserByIdUseCaseResponse> {
-    const users = await this.usersRepository.findAll(page);
+  }: ListInactiveUsersUseCaseRequest): Promise<ListInactiveUsersUseCaseResponse> {
+    const users = await this.usersRepository.findAllInactive(page);
 
     return {
       users,

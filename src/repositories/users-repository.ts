@@ -8,14 +8,14 @@ export interface UpdateUserData {
 }
 
 export interface UsersRepository {
-  findAll(): Promise<User[]>;
+  findAll(page: number): Promise<User[]>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
-  findAllInactive(): Promise<User[]>;
+  findAllInactive(page: number): Promise<User[]>;
   create(data: Prisma.UserCreateInput): Promise<User>;
   update(data: UpdateUserData): Promise<User>;
   softDelete(id: string): Promise<void>;
-  hardDelete(id:string): Promise<void>
+  hardDelete(id: string): Promise<void>;
   findByIdIncludingInactive(id: string): Promise<User | null>;
   reactivate(id: string): Promise<User>;
 }

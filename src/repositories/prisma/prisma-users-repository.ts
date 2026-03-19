@@ -1,25 +1,34 @@
-import type { Prisma, User } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import type { UpdateUserData, UsersRepository } from "../users-repository.js";
 import { getPrisma } from "../../lib/prisma.js";
 
 export class PrismaUsersRepository implements UsersRepository {
   private prisma = getPrisma();
 
-  async findAll() {
+  async findAll(page: number) {
+    const LIMIT = 20;
+
     const users = await this.prisma.user.findMany({
       where: {
         isActive: true,
       },
+      take: LIMIT,
+      skip: (page - 1) * LIMIT,
+      orderBy: { createdAt: "desc" },
     });
 
     return users;
   }
 
-  findAllInactive() {
+  findAllInactive(page: number) {
+    const LIMIT = 20;
     const users = this.prisma.user.findMany({
       where: {
         isActive: false,
       },
+      take: LIMIT,
+      skip: (page - 1) * LIMIT,
+      orderBy: { createdAt: "desc" },
     });
 
     return users;
