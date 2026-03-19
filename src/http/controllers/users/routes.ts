@@ -10,6 +10,7 @@ import { authenticate } from "./authenticate.js";
 import { verifyJWT } from "../../middlewares/verify-jwt.js";
 import { refresh } from "./refresh.js";
 import { verifyUserRole } from "../../middlewares/verify-user-role.js";
+import { hardDelete } from "./hard-delete.js";
 
 export async function usersRoutes(app: FastifyInstance) {
   app.post("/users", create);
@@ -26,4 +27,5 @@ export async function usersRoutes(app: FastifyInstance) {
   app.patch("/users/:id/reactivate", { onRequest: [verifyJWT, verifyUserRole("ADMIN")] }, reactivate);
 
   app.delete("/users/:id", { onRequest: [verifyJWT, verifyUserRole("ADMIN")] }, deleteUser);
+  app.delete("/users/:id/permanent", {onRequest: [verifyJWT, verifyUserRole("ADMIN")]} ,hardDelete)
 }

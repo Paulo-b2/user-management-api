@@ -14,7 +14,8 @@ export interface UsersRepository {
   findAllInactive(): Promise<User[]>;
   create(data: Prisma.UserCreateInput): Promise<User>;
   update(data: UpdateUserData): Promise<User>;
-  delete(id: string): Promise<void>;
+  softDelete(id: string): Promise<void>;
+  hardDelete(id:string): Promise<void>
   findByIdIncludingInactive(id: string): Promise<User | null>;
   reactivate(id: string): Promise<User>;
 }

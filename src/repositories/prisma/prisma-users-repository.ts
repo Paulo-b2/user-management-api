@@ -68,12 +68,18 @@ export class PrismaUsersRepository implements UsersRepository {
     return user;
   }
 
-  async delete(id: string) {
+  async softDelete(id: string) {
     await this.prisma.user.update({
       where: { id },
       data: {
         isActive: false,
       },
+    });
+  }
+
+  async hardDelete(id: string) {
+    await this.prisma.user.delete({
+      where: { id },
     });
   }
 
