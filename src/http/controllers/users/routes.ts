@@ -9,6 +9,7 @@ import { getInactive } from "./list-inactive.js";
 import { authenticate } from "./authenticate.js";
 import { verifyJWT } from "../../middlewares/verify-jwt.js";
 import { refresh } from "./refresh.js";
+import { verifyUserRole } from "../../middlewares/verify-user-role.js";
 
 export async function usersRoutes(app: FastifyInstance) {
   app.post("/users", create);
@@ -22,7 +23,7 @@ export async function usersRoutes(app: FastifyInstance) {
   app.get("/users/inactive", { onRequest: [verifyJWT] }, getInactive);
 
   app.patch("/users/:id", { onRequest: [verifyJWT] }, update);
-  app.patch("/users/:id/reactivate", { onRequest: [verifyJWT] }, reactivate);
+  app.patch("/users/:id/reactivate", { onRequest: [verifyJWT, verifyUserRole("ADMIN")] }, reactivate);
 
-  app.delete("/users/:id", { onRequest: [verifyJWT] }, deleteUser);
+  app.delete("/users/:id", { onRequest: [verifyJWT, verifyUserRole("ADMIN")] }, deleteUser);
 }
