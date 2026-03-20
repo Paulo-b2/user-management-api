@@ -20,9 +20,10 @@ export class PrismaUsersRepository implements UsersRepository {
     return users;
   }
 
-  findAllInactive(page: number) {
+  async findAllInactive(page: number) {
     const LIMIT = 20;
-    const users = this.prisma.user.findMany({
+
+    const users = await this.prisma.user.findMany({
       where: {
         isActive: false,
       },

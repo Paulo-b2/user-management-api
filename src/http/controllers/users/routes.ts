@@ -21,7 +21,7 @@ export async function usersRoutes(app: FastifyInstance) {
   // Authenticated
   app.get("/users", { onRequest: [verifyJWT] }, list);
   app.get("/users/:id", { onRequest: [verifyJWT] }, getById);
-  app.get("/users/inactive", { onRequest: [verifyJWT] }, listInactive);
+  app.get("/users/inactive", { onRequest: [verifyJWT, verifyUserRole("ADMIN")] }, listInactive);
 
   app.patch("/users/:id", { onRequest: [verifyJWT] }, update);
   app.patch("/users/:id/reactivate", { onRequest: [verifyJWT, verifyUserRole("ADMIN")] }, reactivate);
