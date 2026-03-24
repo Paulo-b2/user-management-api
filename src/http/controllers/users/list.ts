@@ -5,16 +5,22 @@ import z from "zod";
 export async function list(request: FastifyRequest, reply: FastifyReply) {
   const listQuerySchema = z.object({
     page: z.coerce.number().min(1).default(1),
+    name: z.string().optional(),
   });
 
-  const page = listQuerySchema.parse(request.query);
+  const { page, name } = listQuerySchema.parse(request.query);
 
   try {
     const listUseCase = makeListUsersUseCase();
 
-    const users = await listUseCase.execute(page);
+    const { users } = await listUseCase.execute({ page, name });
 
-    return reply.status(200).send(users);
+    //ideal é remover o retorno da senha direto no prisma
+    const usersWithoutPassword = users.map(
+      ({ password_hash, ...user }) => user,
+    );
+
+    return reply.status(200).send(usersWithoutPassword);
   } catch (error) {
     throw error;
   }

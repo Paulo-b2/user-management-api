@@ -8,7 +8,7 @@ export interface UpdateUserData {
 }
 
 export interface UsersRepository {
-  findAll(page: number): Promise<User[]>;
+  findAll(page: number, name?: string): Promise<User[]>;
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findAllInactive(page: number): Promise<User[]>;

@@ -5,13 +5,22 @@ import { getPrisma } from "../../lib/prisma.js";
 export class PrismaUsersRepository implements UsersRepository {
   private prisma = getPrisma();
 
-  async findAll(page: number) {
+  async findAll(page: number, name?: string) {
+    let where: any = {
+      isActive: true,
+    };
+
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: "insensitive",
+      };
+    }
+
     const LIMIT = 20;
 
     const users = await this.prisma.user.findMany({
-      where: {
-        isActive: true,
-      },
+      where,
       take: LIMIT,
       skip: (page - 1) * LIMIT,
       orderBy: { createdAt: "desc" },
