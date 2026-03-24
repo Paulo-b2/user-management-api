@@ -3,6 +3,7 @@ import type { UsersRepository } from "../repositories/users-repository.js";
 
 interface ListInactiveUsersUseCaseRequest {
   page: number;
+  name?: string | undefined;
 }
 
 interface ListInactiveUsersUseCaseResponse {
@@ -14,8 +15,9 @@ export class ListInactiveUsersUseCase {
 
   async execute({
     page,
+    name,
   }: ListInactiveUsersUseCaseRequest): Promise<ListInactiveUsersUseCaseResponse> {
-    const users = await this.usersRepository.findAllInactive(page);
+    const users = await this.usersRepository.findAllInactive(page, name);
 
     return {
       users,

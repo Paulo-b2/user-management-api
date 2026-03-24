@@ -29,13 +29,22 @@ export class PrismaUsersRepository implements UsersRepository {
     return users;
   }
 
-  async findAllInactive(page: number) {
+  async findAllInactive(page: number, name?: string) {
     const LIMIT = 20;
 
+    let where: any = {
+      isActive: false,
+    };
+
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: "insensitive",
+      };
+    }
+
     const users = await this.prisma.user.findMany({
-      where: {
-        isActive: false,
-      },
+      where,
       take: LIMIT,
       skip: (page - 1) * LIMIT,
       orderBy: { createdAt: "desc" },

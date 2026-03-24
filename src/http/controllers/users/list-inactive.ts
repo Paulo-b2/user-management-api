@@ -8,16 +8,22 @@ export async function listInactive(
 ) {
   const getInactiveQuerySchema = z.object({
     page: z.coerce.number().min(1).default(1),
+    name: z.string().optional(),
   });
 
-  const { page } = getInactiveQuerySchema.parse(request.query);
+  const { page, name } = getInactiveQuerySchema.parse(request.query);
 
   try {
     const listInactiveUsersUseCase = makeListInactiveUsersUseCase();
 
-    const users = await listInactiveUsersUseCase.execute({ page });
+    const { users } = await listInactiveUsersUseCase.execute({ page, name });
 
-    return reply.status(200).send(users);
+    //ideal é remover o retorno da senha direto no prisma
+    const usersWithoutPassword = users.map(
+      ({ password_hash, ...user }) => user,
+    );
+
+    return reply.status(200).send(usersWithoutPassword);
   } catch (error) {
     throw error;
   }
